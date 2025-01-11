@@ -1,0 +1,772 @@
+<html><head><base href="."><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Das Brauhaus Dashboard</title><style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  body {
+    background: #f0f2f5;
+  }
+
+  .header {
+    background: #2c3e50;
+    color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+
+  .profile {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #e74c3c;
+    padding: 2px;
+  }
+
+  .profile-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .profile-name {
+    font-weight: bold;
+  }
+
+  .profile-role {
+    font-size: 0.8rem;
+    color: #ecf0f1;
+  }
+
+  .brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .datetime {
+    text-align: right;
+    font-size: 1rem;
+  }
+
+  .date {
+    font-weight: bold;
+  }
+
+  .time {
+    font-size: 1.2rem;
+    color: #e74c3c;
+  }
+
+  .container {
+    display: flex;
+    min-height: calc(100vh - 82px);
+  }
+
+  .sidebar {
+    width: 250px;
+    background: #34495e;
+    color: white;
+    padding: 1rem 0;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  }
+
+  .sidebar-menu {
+    list-style: none;
+  }
+
+  .sidebar-menu li {
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .sidebar-menu li:hover {
+    background: #2c3e50;
+    padding-left: 2rem;
+  }
+
+  .sidebar-menu li.active {
+    background: #2c3e50;
+    border-left: 4px solid #e74c3c;
+  }
+
+  .content {
+    flex: 1;
+    padding: 2rem;
+  }
+
+  .content-title {
+    font-size: 2rem;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e74c3c;
+  }
+
+  .submenu {
+    display: none;
+    background: #fff;
+    padding: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+  }
+
+  .submenu.active {
+    display: block;
+  }
+
+  .submenu-tabs {
+    display: flex;
+    gap: 1rem;
+    list-style: none;
+  }
+
+  .submenu-tab {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+  }
+
+  .submenu-tab:hover {
+    background: #e74c3c;
+    color: white;
+  }
+
+  .submenu-tab.active {
+    background: #e74c3c;
+    color: white;
+  }
+
+  .salon-area {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem;
+  }
+
+  .furniture-item {
+    background: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+
+  .furniture-item:hover {
+    transform: translateY(-5px);
+  }
+
+  .furniture-icon {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 1rem;
+  }
+
+  .furniture-name {
+    font-weight: bold;
+    color: #2c3e50;
+  }
+
+  .barra {
+    background: #3498db;
+    grid-column: span 2;
+  }
+
+  .mesa-chica {
+    background: #e74c3c;
+  }
+
+  .mesa-grande {
+    background: #2ecc71;
+    grid-column: span 2;
+  }
+
+  .mesa-pared {
+    background: #f1c40f;
+  }
+
+  .mesa-sofa {
+    background: #9b59b6;
+    grid-column: span 2;
+  }
+
+  .taburete {
+    background: #e67e22;
+    border-radius: 50%;
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .furniture-count {
+    display: inline;
+    font-size: 0.8em;
+    color: #666;
+    margin-left: 5px;
+  }
+
+  .mesa-chica-vip {
+    background: #c0392b;
+    border: 2px solid #gold;
+  }
+
+  .mesa-grande-vip {
+    background: #27ae60;
+    border: 2px solid #gold;
+    grid-column: span 2;
+  }
+  
+  .mesa-futbolito {
+    background: #16a085;
+    grid-column: span 3;
+  }
+
+  .futbolito-icon {
+    background: #1abc9c;
+    grid-column: span 1;
+  }
+  
+  .mesa-chica-jardin {
+    background: #6c8e3e;
+  }
+
+  .mesa-grande-jardin {
+    background: #8fb349;
+    grid-column: span 2;
+  }
+  
+  .moto-delivery {
+    background: #e74c3c;
+    border-radius: 8px;
+    padding: 1rem;
+    color: white;
+  }
+
+  .moto-delivery .furniture-icon {
+    fill: white;
+  }
+  
+  .admin-area {
+    display: grid;
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 800px;
+  }
+
+  .admin-box {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .admin-profile {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .admin-profile-pic {
+    width: 100px;
+    height: 100px;
+  }
+
+  .admin-info {
+    flex: 1;
+  }
+
+  .admin-role {
+    color: #666;
+    font-size: 0.9em;
+    margin-top: 0.5rem;
+  }
+
+  .admin-current {
+    color: #2c3e50;
+    font-weight: bold;
+    margin-top: 1rem;
+  }
+
+  .admin-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .admin-button {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    background: #2c3e50;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .admin-button:hover {
+    background: #34495e;
+  }
+
+  .admin-button.delete {
+    background: #e74c3c;
+  }
+
+  .admin-button.delete:hover {
+    background: #c0392b;
+  }
+  
+</style></head><body>
+  <header class="header">
+    <div class="profile">
+      <svg class="profile-pic" viewBox="0 0 100 100">
+        <circle cx="50" cy="40" r="25" fill="#95a5a6"/>
+        <circle cx="50" cy="100" r="40" fill="#95a5a6"/>
+      </svg>
+      <div class="profile-info">
+        <span class="profile-name">Administrador Mart&#xed;nez</span>
+        <span class="profile-role">Administrador del Sistema</span>
+      </div>
+    </div>
+    
+    <div class="brand">
+      Panel Das Brauhaus
+    </div>
+    
+    <div class="datetime">
+      <div class="date" id="current-date"></div>
+      <div class="time" id="current-time"></div>
+    </div>
+  </header>
+
+  <div class="container">
+    <nav class="sidebar">
+      <ul class="sidebar-menu">
+        <li data-section="administracion"><i class="fas fa-cogs"></i>Administraci&#xf3;n</li>
+        <li data-section="personal"><i class="fas fa-users"></i>Personal</li>
+        <li data-section="categorias"><i class="fas fa-tags"></i>Categor&#xed;as</li>
+        <li data-section="mesas"><i class="fas fa-chair"></i>Mesas</li>
+        <li data-section="clientes"><i class="fas fa-user-friends"></i>Clientes</li>
+        <li data-section="ventas"><i class="fas fa-cash-register"></i>Ventas</li>
+        <li data-section="proveedores"><i class="fas fa-truck"></i>Proveedores</li>
+        <li data-section="pedidos"><i class="fas fa-shopping-cart"></i>Pedidos Web</li>
+        <li data-section="impresion"><i class="fas fa-print"></i>Impresi&#xf3;n</li>
+        <li data-section="salir"><i class="fas fa-sign-out-alt"></i>Salir</li>
+      </ul>
+    </nav>
+    
+    <main class="content">
+      <h1 class="content-title" id="section-title">Bienvenido al Panel de Control</h1>
+      <div class="submenu" id="mesas-submenu">
+        <ul class="submenu-tabs">
+          <li class="submenu-tab active" data-area="salon-principal">Sal&#xf3;n Principal</li>
+          <li class="submenu-tab" data-area="salon-vip">Sal&#xf3;n VIP</li>
+          <li class="submenu-tab" data-area="futbolito">Futbolito</li>
+          <li class="submenu-tab" data-area="jardin">Jard&#xed;n</li>
+          <li class="submenu-tab" data-area="delivery">Delivery</li>
+        </ul>
+        
+        <div class="salon-area" id="salon-principal-area">
+          <div class="furniture-item barra">
+            <svg class="furniture-icon" viewBox="0 0 100 40">
+              <rect x="10" y="5" width="80" height="30" fill="#2980b9"/>
+              <rect x="15" y="10" width="70" height="5" fill="#3498db"/>
+            </svg>
+            <div class="furniture-name">Barra</div>
+          </div>
+        </div>
+        
+        <div class="salon-area" id="salon-vip-area" style="display: none;"></div>
+        <div class="salon-area" id="futbolito-area" style="display: none;">
+          <div class="furniture-item mesa-futbolito">
+            <div class="futbolito-icon"></div>
+            <div class="furniture-name">Mesa Futbolito</div>
+          </div>
+        </div>
+        <div class="salon-area" id="jardin-area" style="display: none;"></div>
+        <div class="salon-area" id="delivery-area" style="display: none;">
+          <div class="furniture-item moto-delivery">
+            <svg class="furniture-icon" viewBox="0 0 100 100">
+              <path d="M70,60 H30 V70 H70 V60" fill="#ffffff"/>
+              <circle cx="30" cy="70" r="15" fill="#ffffff"/>
+              <circle cx="70" cy="70" r="15" fill="#ffffff"/> 
+              <path d="M20,40 L80,40 L90,60 H10 L20,40" fill="#ffffff"/>
+              <rect x="35" y="25" width="30" height="15" fill="#ffffff"/>
+            </svg>
+            <div class="furniture-name">Delivery</div>
+            <div class="furniture-count"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+  <script>function updateDateTime() {
+  const now = new Date();
+  const dateOptions = {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  };
+  document.getElementById('current-date').textContent = now.toLocaleDateString('es-ES', dateOptions);
+  const timeOptions = {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  };
+  document.getElementById('current-time').textContent = now.toLocaleTimeString('es-ES', timeOptions);
+}
+updateDateTime();
+setInterval(updateDateTime, 1000);
+function createAdminSection() {
+  const adminArea = document.createElement('div');
+  adminArea.className = 'admin-area';
+  adminArea.innerHTML = `
+    <div class="admin-box">
+      <div class="admin-profile">
+        <svg class="admin-profile-pic" viewBox="0 0 100 100">
+          <circle cx="50" cy="40" r="25" fill="#95a5a6"/>
+          <circle cx="50" cy="100" r="40" fill="#95a5a6"/>
+        </svg>
+        <div class="admin-info">
+          <h2>Administrador (Martínez)</h2>
+          <div class="admin-role">Administrador del Sistema</div>
+        </div>
+      </div>
+      <div class="admin-current">Admin Actual</div>
+    </div>
+    <div class="admin-box">
+      <div class="admin-actions">
+        <button class="admin-button">Agregar Admin</button>
+        <button class="admin-button delete">Borrar Admin</button>
+      </div>
+    </div>
+  `;
+  return adminArea;
+}
+document.querySelectorAll('.sidebar-menu li').forEach(item => {
+  item.addEventListener('click', function () {
+    document.querySelectorAll('.sidebar-menu li').forEach(i => i.classList.remove('active'));
+    this.classList.add('active');
+    const section = this.dataset.section;
+    const sectionTitle = this.textContent;
+    document.getElementById('section-title').textContent = sectionTitle;
+    const mesasSubmenu = document.getElementById('mesas-submenu');
+    const content = document.querySelector('.content');
+    Array.from(content.children).forEach(child => {
+      if (child.id !== 'section-title') {
+        child.remove();
+      }
+    });
+    if (section === 'mesas') {
+      mesasSubmenu.classList.add('active');
+      content.appendChild(mesasSubmenu);
+      generateFurnitureItems();
+    } else if (section === 'administracion') {
+      content.appendChild(createAdminSection());
+    } else if (section === 'categorias') {
+      const placeholder = document.createElement('div');
+      placeholder.textContent = 'Contenido de ' + sectionTitle;
+      content.appendChild(placeholder);
+    } else if (section === 'personal') {
+      const placeholder = document.createElement('div');
+      placeholder.textContent = 'Contenido de ' + sectionTitle;
+      content.appendChild(placeholder);
+    } else if (section === 'clientes') {
+      const placeholder = document.createElement('div');
+      placeholder.textContent = 'Contenido de ' + sectionTitle;
+      content.appendChild(placeholder);
+    } else if (section === 'ventas') {
+      const placeholder = document.createElement('div');
+      placeholder.textContent = 'Contenido de ' + sectionTitle;
+      content.appendChild(placeholder);
+    } else if (section === 'proveedores') {
+      const placeholder = document.createElement('div');
+      placeholder.textContent = 'Contenido de ' + sectionTitle;
+      content.appendChild(placeholder);
+    } else if (section === 'pedidos') {
+      const placeholder = document.createElement('div');
+      placeholder.textContent = 'Contenido de ' + sectionTitle;
+      content.appendChild(placeholder);
+    } else if (section === 'impresion') {
+      const placeholder = document.createElement('div');
+      placeholder.textContent = 'Contenido de ' + sectionTitle;
+      content.appendChild(placeholder);
+    }
+    if (section === 'salir') {
+      if (confirm('¿Está seguro que desea salir?')) {
+        window.location.href = "https://www.dasbrauhaus.com/login";
+      }
+    }
+  });
+});
+function generateFurnitureItems() {
+  const furnitureData = {
+    'barra': 1,
+    'taburete': 3,
+    'mesa-chica': 5,
+    'mesa-grande': 2,
+    'mesa-pared': 4,
+    'mesa-sofa': 3
+  };
+  const furnitureDataVIP = {
+    'mesa-chica-vip': 3,
+    'mesa-grande-vip': 2
+  };
+  const furnitureDataFutbolito = {
+    'mesa-futbolito': 1,
+    'futbolito-icon': 1
+  };
+  const furnitureDataJardin = {
+    'mesa-chica-jardin': 3,
+    'mesa-grande-jardin': 2
+  };
+  const furnitureDataDelivery = {
+    'moto-delivery': 4
+  };
+  const salonArea = document.getElementById('salon-principal-area');
+  const salonVIPArea = document.getElementById('salon-vip-area');
+  const futbolitoArea = document.getElementById('futbolito-area');
+  const jardinArea = document.getElementById('jardin-area');
+  const deliveryArea = document.getElementById('delivery-area');
+  const templates = {};
+  const originalTemplates = `
+    <div class="furniture-item barra">
+      <svg class="furniture-icon" viewBox="0 0 100 40">
+        <rect x="10" y="5" width="80" height="30" fill="#2980b9"/>
+        <rect x="15" y="10" width="70" height="5" fill="#3498db"/>
+      </svg>
+      <div class="furniture-name">Barra</div>
+      <div class="furniture-count"></div>
+    </div>
+    
+    <div class="furniture-item taburete">
+      <svg class="furniture-icon" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="30" fill="#d35400"/>
+        <circle cx="50" cy="50" r="20" fill="#e67e22"/>
+      </svg>
+      <div class="furniture-name">Taburete</div>
+      <div class="furniture-count"></div>
+    </div>
+
+    <div class="furniture-item mesa-chica">
+      <svg class="furniture-icon" viewBox="0 0 100 100">
+        <rect x="25" y="25" width="50" height="50" fill="#c0392b"/>
+        <rect x="45" y="75" width="10" height="15" fill="#c0392b"/>
+      </svg>
+      <div class="furniture-name">Mesa Chica</div>
+      <div class="furniture-count"></div>
+    </div>
+    
+    <div class="furniture-item mesa-grande">
+      <svg class="furniture-icon" viewBox="0 0 200 100">
+        <rect x="25" y="25" width="150" height="50" fill="#27ae60"/>
+        <rect x="95" y="75" width="10" height="15" fill="#27ae60"/>
+      </svg>
+      <div class="furniture-name">Mesa Grande</div>
+      <div class="furniture-count"></div>
+    </div>
+    
+    <div class="furniture-item mesa-pared">
+      <svg class="furniture-icon" viewBox="0 0 100 100">
+        <rect x="20" y="20" width="60" height="60" fill="#f39c12"/>
+        <rect x="0" y="0" width="10" height="100" fill="#d35400"/>
+      </svg>
+      <div class="furniture-name">Mesa Pared</div>
+      <div class="furniture-count"></div>
+    </div>
+    
+    <div class="furniture-item mesa-sofa">
+      <svg class="furniture-icon" viewBox="0 0 200 100">
+        <rect x="25" y="25" width="150" height="50" fill="#8e44ad"/>
+        <path d="M25,25 Q25,0 50,25" fill="#9b59b6"/>
+        <path d="M175,25 Q175,0 150,25" fill="#9b59b6"/>
+      </svg>
+      <div class="furniture-name">Mesa Sofá</div>
+      <div class="furniture-count"></div>
+    </div>
+    
+    <div class="furniture-item mesa-chica-vip">
+      <svg class="furniture-icon" viewBox="0 0 100 100">
+        <rect x="25" y="25" width="50" height="50" fill="#c0392b"/>
+        <rect x="45" y="75" width="10" height="15" fill="#c0392b"/>
+        <rect x="23" y="23" width="54" height="54" fill="none" stroke="gold" stroke-width="2"/>
+      </svg>
+      <div class="furniture-name">Mesa Chica VIP</div>
+      <div class="furniture-count"></div>
+    </div>
+    
+    <div class="furniture-item mesa-grande-vip">
+      <svg class="furniture-icon" viewBox="0 0 200 100">
+        <rect x="25" y="25" width="150" height="50" fill="#27ae60"/>
+        <rect x="95" y="75" width="10" height="15" fill="#27ae60"/>
+        <rect x="23" y="23" width="154" height="54" fill="none" stroke="gold" stroke-width="2"/>
+      </svg>
+      <div class="furniture-name">Mesa Grande VIP</div>
+      <div class="furniture-count"></div>
+    </div>
+    <div class="furniture-item mesa-futbolito">
+      <svg class="furniture-icon" viewBox="0 0 300 100">
+        <rect x="25" y="25" width="250" height="50" fill="#16a085"/>
+        <rect x="145" y="75" width="10" height="15" fill="#16a085"/>
+      </svg>
+      <div class="furniture-name">Mesa Larga Futbolito</div>
+      <div class="furniture-count"></div>
+    </div>
+
+    <div class="furniture-item futbolito-icon">
+      <svg class="furniture-icon" viewBox="0 0 100 100">
+        <rect x="20" y="10" width="60" height="80" fill="#1abc9c"/>
+        <circle cx="50" cy="50" r="10" fill="#fff"/>
+        <line x1="20" y1="35" x2="80" y2="35" stroke="#fff" stroke-width="2"/>
+        <line x1="20" y1="65" x2="80" y2="65" stroke="#fff" stroke-width="2"/>
+        <line x1="50" y1="10" x2="50" y2="90" stroke="#fff" stroke-width="2"/>
+      </svg>
+      <div class="furniture-name">Futbolito</div>
+      <div class="furniture-count"></div>
+    </div>
+    <div class="furniture-item mesa-chica-jardin">
+      <svg class="furniture-icon" viewBox="0 0 100 100">
+        <rect x="25" y="25" width="50" height="50" fill="#6c8e3e"/>
+        <rect x="45" y="75" width="10" height="15" fill="#6c8e3e"/>
+        <path d="M25,25 C35,15 65,15 75,25" stroke="#90b352" fill="none" stroke-width="2"/>
+      </svg>
+      <div class="furniture-name">Mesa Chica Jardín</div>
+      <div class="furniture-count"></div>
+    </div>
+
+    <div class="furniture-item mesa-grande-jardin">
+      <svg class="furniture-icon" viewBox="0 0 200 100">
+        <rect x="25" y="25" width="150" height="50" fill="#8fb349"/>
+        <rect x="95" y="75" width="10" height="15" fill="#8fb349"/>
+        <path d="M25,25 C60,15 140,15 175,25" stroke="#a6c75d" fill="none" stroke-width="2"/>
+      </svg>
+      <div class="furniture-name">Mesa Grande Jardín</div>
+      <div class="furniture-count"></div>
+    </div>
+    <div class="furniture-item moto-delivery">
+      <svg class="furniture-icon" viewBox="0 0 100 100">
+        <path d="M70,60 H30 V70 H70 V60" fill="#ffffff"/>
+        <circle cx="30" cy="70" r="15" fill="#ffffff"/>
+        <circle cx="70" cy="70" r="15" fill="#ffffff"/>
+        <path d="M20,40 L80,40 L90,60 H10 L20,40" fill="#ffffff"/>
+        <rect x="35" y="25" width="30" height="15" fill="#ffffff"/>
+      </svg>
+      <div class="furniture-name">Delivery</div>
+      <div class="furniture-count"></div>
+    </div>
+  `;
+  const templateDiv = document.createElement('div');
+  templateDiv.innerHTML = originalTemplates;
+  templateDiv.querySelectorAll('.furniture-item').forEach(item => {
+    const type = Array.from(item.classList).find(cls => cls !== 'furniture-item');
+    templates[type] = item.outerHTML;
+  });
+  salonArea.innerHTML = '';
+  salonVIPArea.innerHTML = '';
+  futbolitoArea.innerHTML = '';
+  jardinArea.innerHTML = '';
+  deliveryArea.innerHTML = '';
+  let counter = 1;
+  Object.entries(furnitureData).forEach(([type, count]) => {
+    for (let i = 0; i < count; i++) {
+      const template = templates[type];
+      const div = document.createElement('div');
+      div.innerHTML = template;
+      const item = div.firstElementChild;
+      item.querySelector('.furniture-count').textContent = `#${counter}`;
+      salonArea.appendChild(item);
+      counter++;
+    }
+  });
+  counter = 1;
+  Object.entries(furnitureDataVIP).forEach(([type, count]) => {
+    for (let i = 0; i < count; i++) {
+      const template = templates[type];
+      const div = document.createElement('div');
+      div.innerHTML = template;
+      const item = div.firstElementChild;
+      item.querySelector('.furniture-count').textContent = `#${counter}`;
+      salonVIPArea.appendChild(item);
+      counter++;
+    }
+  });
+  counter = 1;
+  Object.entries(furnitureDataFutbolito).forEach(([type, count]) => {
+    for (let i = 0; i < count; i++) {
+      const template = templates[type];
+      const div = document.createElement('div');
+      div.innerHTML = template;
+      const item = div.firstElementChild;
+      item.querySelector('.furniture-count').textContent = `#${counter}`;
+      futbolitoArea.appendChild(item);
+      counter++;
+    }
+  });
+  counter = 1;
+  Object.entries(furnitureDataJardin).forEach(([type, count]) => {
+    for (let i = 0; i < count; i++) {
+      const template = templates[type];
+      const div = document.createElement('div');
+      div.innerHTML = template;
+      const item = div.firstElementChild;
+      item.querySelector('.furniture-count').textContent = `#${counter}`;
+      jardinArea.appendChild(item);
+      counter++;
+    }
+  });
+  counter = 1;
+  Object.entries(furnitureDataDelivery).forEach(([type, count]) => {
+    for (let i = 0; i < count; i++) {
+      const template = templates[type];
+      const div = document.createElement('div');
+      div.innerHTML = template;
+      const item = div.firstElementChild;
+      item.querySelector('.furniture-count').textContent = `#${counter}`;
+      deliveryArea.appendChild(item);
+      counter++;
+    }
+  });
+}
+document.addEventListener('DOMContentLoaded', generateFurnitureItems);
+document.querySelectorAll('.submenu-tab').forEach(tab => {
+  tab.addEventListener('click', function () {
+    document.querySelectorAll('.submenu-tab').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+    const areaId = this.dataset.area + '-area';
+    document.querySelectorAll('.salon-area').forEach(area => {
+      if (area.id === areaId) {
+        area.style.display = 'grid';
+        generateFurnitureItems();
+      } else {
+        area.style.display = 'none';
+      }
+    });
+  });
+});</script>
+</body></html>
